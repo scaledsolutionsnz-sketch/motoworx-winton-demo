@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en-NZ">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stock Manager | Motoworx Winton</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0B0C0B">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230B0C0B'/%3E%3Cpath d='M6 24V8h4l6 9 6-9h4v16h-4v-9l-6 9-6-9v9z' fill='%238DC63F'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* Admin is an Operate surface: dense, scannable, no marketing flourish */
+  body{background:var(--pit)}
+  .abar{position:sticky;top:0;z-index:20;background:rgba(11,12,11,.96);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line)}
+  .abar-in{display:flex;align-items:center;justify-content:space-between;gap:16px;height:70px}
+  .abar img{height:34px;width:auto}
+  .who{font-size:.9rem;color:var(--dim)}
+  .ashell{padding:34px 0 90px}
+  .apanel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:26px 24px}
+  .arow{display:grid;gap:18px}
+  @media(min-width:700px){ .arow--2{grid-template-columns:1fr 1fr} .arow--3{grid-template-columns:1fr 1fr 1fr} }
+  .alist{display:grid;gap:12px;margin-top:22px}
+  .aitem{display:grid;grid-template-columns:76px 1fr auto;gap:16px;align-items:center;
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--r-sm);padding:12px 14px}
+  .aitem img{width:76px;height:58px;object-fit:cover;border-radius:6px;background:var(--panel-2)}
+  .aitem .noimg{width:76px;height:58px;border-radius:6px;background:var(--panel-2);display:grid;place-items:center;
+    color:var(--dim);font-size:.72rem;text-align:center;line-height:1.2}
+  .aitem h4{font-size:1.06rem;margin-bottom:3px}
+  .aitem .meta{font-size:.86rem;color:var(--dim)}
+  .aitem .acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .mini{height:36px;padding:0 13px;border-radius:8px;border:1px solid var(--line-2);background:transparent;
+    color:var(--ink-2);font-family:'Saira Condensed',sans-serif;font-weight:600;font-size:.88rem;
+    text-transform:uppercase;letter-spacing:.04em;transition:.2s}
+  .mini:hover{border-color:var(--volt);color:var(--volt)}
+  .mini--danger:hover{border-color:#E0705C;color:#E0705C}
+  .mini--on{background:var(--volt);border-color:var(--volt);color:var(--on-volt)}
+  @media(max-width:620px){ .aitem{grid-template-columns:60px 1fr} .aitem .acts{grid-column:1/-1;justify-content:flex-start} .aitem img,.aitem .noimg{width:60px;height:48px} }
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(14px);z-index:60;
+    background:var(--volt);color:var(--on-volt);padding:13px 22px;border-radius:100px;font-weight:600;
+    opacity:0;pointer-events:none;transition:opacity .3s var(--ease),transform .3s var(--ease)}
+  .toast.show{opacity:1;transform:translateX(-50%)}
+  .toast--bad{background:#E0705C;color:#1A0A06}
+  .tabs{display:flex;gap:9px;margin-bottom:24px;flex-wrap:wrap}
+  .drop{border:1px dashed var(--line-2);border-radius:var(--r-sm);padding:18px;text-align:center;color:var(--dim);
+    font-size:.92rem;cursor:pointer;transition:.2s}
+  .drop:hover{border-color:var(--volt);color:var(--ink-2)}
+  .drop img{max-height:120px;width:auto;margin:0 auto 10px;border-radius:6px}
+</style>
+</head>
+<body>
+
+<div class="abar">
+  <div class="wrap abar-in">
+    <a class="brand" href="index.html"><img src="img/logo-motoworx.png" alt="Motoworx Winton"></a>
+    <div style="display:flex;align-items:center;gap:14px">
+      <span class="who" id="who"></span>
+      <button class="mini" id="signOut" hidden>Sign out</button>
+    </div>
+  </div>
+</div>
+
+<main class="wrap ashell">
+
+  <!-- Sign in -->
+  <section id="authView" hidden>
+    <div class="apanel" style="max-width:440px;margin:40px auto">
+      <h2 style="font-size:1.8rem">Stock manager</h2>
+      <p style="margin:10px 0 24px;font-size:.98rem">Sign in to add, edit or remove bikes from the website.</p>
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label for="loginPass">Password</label>
+          <input type="password" id="loginPass" autocomplete="current-password" required>
+        </div>
+        <span class="field-err" id="loginErr"></span>
+        <button class="btn btn--volt" type="submit" id="loginBtn" style="width:100%;margin-top:8px">Sign in</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Manager -->
+  <section id="appView" hidden>
+    <div class="tabs">
+      <button class="filter" type="button" data-tab="stock" aria-pressed="true">Stock</button>
+      <button class="filter" type="button" data-tab="enquiries" aria-pressed="false">Enquiries <span id="enqCount"></span></button>
+    </div>
+
+    <!-- Stock tab -->
+    <div id="tabStock">
+      <div class="apanel">
+        <h3 id="formTitle">Add a bike</h3>
+        <p style="font-size:.94rem;margin:6px 0 22px">Only the make and model are required. Anything you leave blank is simply left off the listing.</p>
+        <form id="bikeForm" novalidate>
+          <input type="hidden" id="bikeId">
+          <div class="arow arow--3">
+            <div class="field"><label for="make">Make</label>
+              <select id="make" required>
+                <option>Kawasaki</option><option>CFMOTO</option><option>Other</option>
+              </select></div>
+            <div class="field"><label for="model">Model</label><input type="text" id="model" placeholder="KLX230" required></div>
+            <div class="field"><label for="year">Year</label><input type="number" id="year" min="1970" max="2100" placeholder="2026"></div>
+          </div>
+          <div class="arow arow--3">
+            <div class="field"><label for="price">Price (NZD)</label><input type="number" id="price" min="0" step="1" placeholder="7995"></div>
+            <div class="field"><label for="odo">Odometer (km)</label><input type="number" id="odo" min="0" step="1" placeholder="Leave blank if new"></div>
+            <div class="field"><label for="cond">Condition</label>
+              <select id="cond"><option value="new">New</option><option value="used">Used</option></select></div>
+          </div>
+          <div class="arow arow--2">
+            <div class="field"><label for="cat">Type</label>
+              <select id="cat">
+                <option value="">Not set</option>
+                <option>Road</option><option>Adventure</option><option>Dirt</option>
+                <option>Farm</option><option>Quad</option><option>Side-by-side</option><option>Scooter</option>
+              </select></div>
+            <div class="field"><label for="sort">Show near the top</label>
+              <select id="sort"><option value="0">Normal</option><option value="10">Featured</option></select></div>
+          </div>
+          <div class="field">
+            <label for="blurb">Short description</label>
+            <textarea id="blurb" placeholder="A line or two about the bike, as you would say it to a customer."></textarea>
+          </div>
+          <div class="field">
+            <label for="photo">Photo</label>
+            <div class="drop" id="drop">
+              <div id="dropPreview"></div>
+              <span id="dropText">Tap to choose a photo, or take one on your phone</span>
+              <input type="file" id="photo" accept="image/*" hidden>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+            <button class="btn btn--volt" type="submit" id="saveBtn">Add bike</button>
+            <button class="btn btn--line" type="button" id="cancelEdit" hidden>Cancel</button>
+          </div>
+          <span class="field-err" id="bikeErr"></span>
+        </form>
+      </div>
+
+      <h3 style="margin:38px 0 0">On the website <span class="dim" id="stockCount" style="font-family:'Barlow';font-size:.9rem;text-transform:none;letter-spacing:0"></span></h3>
+      <div class="alist" id="adminList"></div>
+    </div>
+
+    <!-- Enquiries tab -->
+    <div id="tabEnquiries" hidden>
+      <div class="alist" id="enqList"></div>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/config.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
