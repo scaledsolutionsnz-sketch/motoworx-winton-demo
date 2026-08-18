@@ -14,7 +14,7 @@
 <style>
   /* Admin is an Operate surface: dense, scannable, no marketing flourish */
   body{background:var(--pit)}
-  .abar{position:sticky;top:0;z-index:20;background:rgba(11,12,11,.96);backdrop-filter:blur(12px);
+  .abar{position:sticky;top:0;z-index:20;background:#fff;backdrop-filter:blur(12px);
     border-bottom:1px solid var(--line)}
   .abar-in{display:flex;align-items:center;justify-content:space-between;gap:16px;height:70px}
   .abar img{height:34px;width:auto}
@@ -27,6 +27,7 @@
   .aitem{display:grid;grid-template-columns:76px 1fr auto;gap:16px;align-items:center;
     background:var(--panel);border:1px solid var(--line);border-radius:var(--r-sm);padding:12px 14px}
   .aitem img{width:76px;height:58px;object-fit:cover;border-radius:6px;background:var(--panel-2)}
+  .apanel,.aitem{box-shadow:0 12px 26px -24px rgba(11,12,11,.5)}
   .aitem .noimg{width:76px;height:58px;border-radius:6px;background:var(--panel-2);display:grid;place-items:center;
     color:var(--dim);font-size:.72rem;text-align:center;line-height:1.2}
   .aitem h4{font-size:1.06rem;margin-bottom:3px}
@@ -38,6 +39,7 @@
   .mini:hover{border-color:var(--volt);color:var(--volt)}
   .mini--danger:hover{border-color:#E0705C;color:#E0705C}
   .mini--on{background:var(--volt);border-color:var(--volt);color:var(--on-volt)}
+  .toast{box-shadow:0 18px 40px -22px rgba(11,12,11,.6)}
   @media(max-width:620px){ .aitem{grid-template-columns:60px 1fr} .aitem .acts{grid-column:1/-1;justify-content:flex-start} .aitem img,.aitem .noimg{width:60px;height:48px} }
   .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(14px);z-index:60;
     background:var(--volt);color:var(--on-volt);padding:13px 22px;border-radius:100px;font-weight:600;

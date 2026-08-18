@@ -37,7 +37,7 @@
 <header class="nav" id="nav">
   <div class="wrap nav-in">
     <a class="brand" href="index.html" aria-label="Motoworx Winton home">
-      <img src="img/logo-motoworx.png" alt="Motoworx Winton" width="180" height="40">
+      <img src="img/logo-motoworx.png" alt="Motoworx Winton" width="200" height="44">
     </a>
     <nav class="nav-links" aria-label="Main">
       <a href="stock.html">Bikes</a>
@@ -45,13 +45,13 @@
       <a href="#finance">Finance</a>
       <a href="#team">Our Team</a>
       <a href="#enquire">Enquire</a>
-      <a href="#find">Find Us</a>
     </nav>
+    <div class="nav-util">
+      <a class="util" href="#find"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>Find us</a>
+      <a class="util util--call" href="tel:+64273384620"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>027 338 4620</a>
+    </div>
     <div class="nav-cta">
-      <a class="nav-phone" href="tel:+64273384620">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>
-        027 338 4620
-      </a>
+      <a class="nav-phone" href="tel:+64273384620"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>027 338 4620</a>
       <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="drawer">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
@@ -68,42 +68,52 @@
   <a href="#find">Find Us</a>
 </div>
 
-<section class="hero">
-  <div class="hero-shot">
-    <img src="img/team.jpg" alt="The Motoworx Winton team outside the shop on Great North Road" width="1800" height="1233" fetchpriority="high">
+<h1 class="sr-only">Motoworx Winton, Kawasaki and CFMOTO dealer in Winton, Southland</h1>
+<section class="hero" id="home">
+    <div class="hero-slide on" data-slide="0"><img src="img/showroom-dirt.jpg" alt="A row of new Kawasaki dirt bikes in the Motoworx showroom" fetchpriority="high"></div>
+    <div class="hero-slide" data-slide="1"><img src="img/showroom-sxs.jpg" alt="CFMOTO side-by-sides and quads lined up in the showroom" loading="lazy"></div>
+    <div class="hero-slide" data-slide="2"><img src="img/bike-adv.jpg" alt="An adventure bike ready to go on the showroom floor" loading="lazy"></div>
+    <div class="hero-slide" data-slide="3"><img src="img/team.jpg" alt="The Motoworx Winton team outside the shop" loading="lazy"></div>
+  <div class="hero-copy">
+    <div class="wrap">
+        <div class="hero-panel on" data-panel="0"><h2>New Kawasaki, on the floor now</h2><p>From KLX trail bikes to the KX motocross range, set up and ready to ride.</p><a class="hero-link" href="stock.html">See the range<i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 6l6 6-6 6"/></svg></i></a></div>
+        <div class="hero-panel" data-panel="1"><h2>CFMOTO quads and side-by-sides</h2><p>Built for Southland farms. Trays, tow bars and the grunt to earn their keep.</p><a class="hero-link" href="stock.html">See the range<i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 6l6 6-6 6"/></svg></i></a></div>
+        <div class="hero-panel" data-panel="2"><h2>Adventure, sorted before you leave</h2><p>Every bike gets a full pre-delivery in our own workshop before it goes out the door.</p><a class="hero-link" href="#workshop">Our workshop<i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 6l6 6-6 6"/></svg></i></a></div>
+        <div class="hero-panel" data-panel="3"><h2>Your local dealer in Winton</h2><p>Six of us on the floor and in the workshop, on Great North Road.</p><a class="hero-link" href="#team">Meet the team<i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 6l6 6-6 6"/></svg></i></a></div>
+    </div>
   </div>
-  <div class="hero-veil"></div>
-  <div class="wrap hero-in">
-    <h1>Kawasaki and CFMOTO, <em>sorted in Winton</em>.</h1>
-    <p>Six of us on the floor and in the workshop, selling and servicing bikes, quads and side-by-sides for Southland riders. Come and see the stock on Great North Road.</p>
-    <div class="hero-actions">
-      <a class="btn btn--volt" href="stock.html">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 17.5h-6l-2.5-5h7l2 5M12 12.5 10 7h-2M14 7h4"/></svg>
-        See what's on the floor
-      </a>
-      <a class="btn btn--line" href="#enquire">Talk to us</a>
-    </div>
-    <div class="hero-meta">
-      <a href="https://maps.google.com/?q=63+Great+North+Road,+Winton+9720" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        63 Great North Road, Winton
-      </a>
-      <a href="tel:+64273384620">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>
-        027 338 4620
-      </a>
-      <span>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
-        Weekdays on the tools, Saturday mornings
-      </span>
-    </div>
+  <div class="hero-dots" role="tablist" aria-label="Hero slides">
+    <button type="button" role="tab" aria-selected="true" aria-label="Slide 1" data-dot="0"></button>
+    <button type="button" role="tab" aria-selected="false" aria-label="Slide 2" data-dot="1"></button>
+    <button type="button" role="tab" aria-selected="false" aria-label="Slide 3" data-dot="2"></button>
+    <button type="button" role="tab" aria-selected="false" aria-label="Slide 4" data-dot="3"></button>
   </div>
 </section>
+
+<!-- Category tiles -->
+<nav class="tiles" aria-label="Shortcuts">
+  <a class="tile" href="stock.html">
+    <img src="img/bike-white.jpg" alt="" loading="lazy">
+    <span class="tile-in"><h3>Bikes on the floor</h3><span>See the stock <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 6l6 6-6 6"/></svg></span></span>
+  </a>
+  <a class="tile" href="#workshop">
+    <img src="img/exterior.jpg" alt="" loading="lazy">
+    <span class="tile-in"><h3>Workshop &amp; parts</h3><span>Book it in <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 6l6 6-6 6"/></svg></span></span>
+  </a>
+  <a class="tile" href="#finance">
+    <img src="img/yard.jpg" alt="" loading="lazy">
+    <span class="tile-in"><h3>Finance with UDC</h3><span>Work out the weekly <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 6l6 6-6 6"/></svg></span></span>
+  </a>
+  <a class="tile" href="#enquire">
+    <img src="img/showroom-sxs.jpg" alt="" loading="lazy">
+    <span class="tile-in"><h3>Talk to the team</h3><span>Send an enquiry <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 6l6 6-6 6"/></svg></span></span>
+  </a>
+</nav>
 
 <!-- Brands and suppliers, white chips so each mark sits on its own ground -->
 <div class="rail">
   <div class="wrap rail-in">
-    <a class="chip chip--tall" href="https://www.kawasaki.co.nz/" target="_blank" rel="noopener" aria-label="Kawasaki New Zealand">
+    <a class="chip chip--tall" href="https://www.kawasaki-motors.co.nz/" target="_blank" rel="noopener" aria-label="Kawasaki New Zealand">
       <img src="img/logo-kawasaki.png" alt="Kawasaki" loading="lazy">
     </a>
     <a class="chip" href="https://www.cfmoto.co.nz/" target="_blank" rel="noopener" aria-label="CFMOTO New Zealand">
@@ -248,17 +258,34 @@
       <div class="rv">
         <h2>The people you will deal with</h2>
         <p class="lede">Motoworx is a Winton business, run by the same faces you see behind the counter. Between us there is a lot of Southland riding, a lot of Kawasaki history, and enough farm experience to know what a bike gets put through out here.</p>
-        <p class="lede">Justin looks after sales and the day to day. The workshop crew handle servicing and warranty work, and there is always someone on the parts counter who can chase down what you need.</p>
-        <ul class="ticks">
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Locally owned and run, here in Winton</span></li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Authorised Kawasaki and CFMOTO dealer</span></li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Straight answers, whether you are buying or just asking</span></li>
-        </ul>
+        <p class="lede">You will not get passed around a call centre. Ring the shop and you get one of us.</p>
       </div>
       <div class="shot rv">
         <img src="img/team.jpg" alt="The Motoworx Winton team standing outside the shop with a Kawasaki KX" loading="lazy" width="1800" height="1233">
       </div>
     </div>
+
+    <div class="crew rv">
+      <div class="crew-row">
+        <div class="crew-who"><h3>Justin Shaw</h3><span>Sales</span></div>
+        <p>Looks after the sales floor and the day to day. He is the one who will talk you through the range, work out the finance and get the deal sorted.</p>
+        <a class="crew-link" href="#enquire" data-open-dept="sales">Enquire about a bike
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 6l6 6-6 6"/></svg></a>
+      </div>
+      <div class="crew-row">
+        <div class="crew-who"><h3>Parts counter</h3><span>Parts &amp; accessories</span></div>
+        <p>Genuine Kawasaki and CFMOTO parts, oils, tyres and riding gear. Bring the model and they will chase down what you need.</p>
+        <a class="crew-link" href="#enquire" data-open-dept="parts">Order a part
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 6l6 6-6 6"/></svg></a>
+      </div>
+      <div class="crew-row">
+        <div class="crew-who"><h3>Workshop</h3><span>Service &amp; repairs</span></div>
+        <p>Servicing, warranty work, tyres and diagnostics for road, trail and farm machines. Every new bike gets its pre-delivery here before it leaves.</p>
+        <a class="crew-link" href="#enquire" data-open-dept="workshop">Book a service
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 6l6 6-6 6"/></svg></a>
+      </div>
+    </div>
+    <p class="crew-note rv">Names and photos of the full crew go in here once you send them through.</p>
   </div>
 </section>
 
@@ -377,7 +404,7 @@
       </div>
       <div>
         <h4>Brands &amp; links</h4>
-        <a href="https://www.kawasaki.co.nz/" target="_blank" rel="noopener">Kawasaki New Zealand</a>
+        <a href="https://www.kawasaki-motors.co.nz/" target="_blank" rel="noopener">Kawasaki New Zealand</a>
         <a href="https://www.cfmoto.co.nz/" target="_blank" rel="noopener">CFMOTO New Zealand</a>
         <a href="https://www.trademe.co.nz/a/motors/motorbikes" target="_blank" rel="noopener">Our Trade Me listings</a>
         <a href="https://www.udc.co.nz/" target="_blank" rel="noopener">UDC Finance</a>

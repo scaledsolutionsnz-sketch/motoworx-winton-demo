@@ -55,6 +55,27 @@
     rv.forEach(function (el) { el.classList.add('in'); });
   }
 
+
+  /* ---------- hero carousel ---------- */
+  var slides = document.querySelectorAll('.hero-slide');
+  var panels = document.querySelectorAll('.hero-panel');
+  var dots = document.querySelectorAll('[data-dot]');
+  if (slides.length > 1) {
+    var idx = 0, timer = null;
+    function go(n) {
+      idx = (n + slides.length) % slides.length;
+      slides.forEach(function (el, i) { el.classList.toggle('on', i === idx); });
+      panels.forEach(function (el, i) { el.classList.toggle('on', i === idx); });
+      dots.forEach(function (el, i) { el.setAttribute('aria-selected', String(i === idx)); });
+    }
+    function start() { if (!reduce) timer = setInterval(function () { go(idx + 1); }, 6000); }
+    dots.forEach(function (d, i) {
+      d.addEventListener('click', function () { clearInterval(timer); go(i); start(); });
+    });
+    go(0);
+    start();
+  }
+
   /* ---------- stock ---------- */
   var money = function (n) {
     if (n === null || n === undefined || n === '') return null;
