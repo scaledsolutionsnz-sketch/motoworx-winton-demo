@@ -131,9 +131,10 @@ p{max-width:68ch}
 .hero-slide::after{content:"";position:absolute;inset:0;
   background:linear-gradient(94deg,rgba(9,10,9,.94) 0%,rgba(9,10,9,.8) 34%,rgba(9,10,9,.34) 68%,rgba(9,10,9,.3) 100%)}
 .hero-copy{position:absolute;inset:0;z-index:3;display:flex;align-items:center;pointer-events:none}
-.hero-copy .wrap{width:100%}
-.hero-panel{max-width:34ch;pointer-events:auto;opacity:0;transform:translateY(14px);
+.hero-copy .wrap{width:100%;display:grid;align-items:center}
+.hero-panel{grid-area:1/1;max-width:38ch;pointer-events:none;opacity:0;transform:translateY(14px);
   transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.hero-panel.on{pointer-events:auto}
 .hero-slide.on ~ .hero-copy .hero-panel[data-i],
 .hero-panel.on{opacity:1;transform:none}
 .hero-panel h2{font-size:clamp(2.1rem,4.6vw,3.7rem);color:#fff;text-wrap:balance}
@@ -150,6 +151,17 @@ p{max-width:68ch}
   border:1.5px solid rgba(255,255,255,.75);transition:background .25s var(--ease),transform .25s var(--ease)}
 .hero-dots button[aria-selected="true"]{background:#fff;transform:scale(1.15)}
 .hero-dots button:hover{background:rgba(255,255,255,.6)}
+
+.hero-review{display:flex;gap:13px;align-items:flex-start;margin-top:30px;padding:15px 18px;
+  max-width:400px;border-radius:var(--r-sm);background:rgba(9,10,9,.62);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.2)}
+.hero-review .g{flex:none;width:22px;height:22px;margin-top:2px}
+.hero-review-b{min-width:0}
+.hero-review .stars{display:block;color:#F5C518;font-size:.92rem;letter-spacing:2px;line-height:1}
+.hero-review q{display:block;quotes:none;color:#fff;font-size:.94rem;line-height:1.5;margin-top:7px}
+.hero-review cite{display:block;font-style:normal;margin-top:7px;font-size:.79rem;letter-spacing:.1em;
+  text-transform:uppercase;color:rgba(255,255,255,.78);font-family:'Saira Condensed',system-ui,sans-serif;font-weight:700}
+@media(max-width:700px){ .hero-review{display:none} }
 
 /* ---------- category tiles ---------- */
 .tiles{display:grid;grid-template-columns:1fr;gap:2px;background:var(--line)}
