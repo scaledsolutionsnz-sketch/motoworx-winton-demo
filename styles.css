@@ -385,3 +385,7 @@ footer{background:var(--dark);color:#AEB6A8;border-top:1px solid var(--line);pad
 /* Keep the wider mark and contact controls inside every viewport. */
 @media(max-width:540px){.wrap.nav-in{padding-left:16px}.nav-in{gap:10px}.brand img{width:170px}.nav-cta{gap:8px;padding-right:12px}.nav-phone{font-size:.85rem}}
 @media(min-width:1120px){.stock-nav .nav-links{gap:24px}.stock-nav .nav-cta{display:flex}.stock-nav .brand img{width:250px}.stock-nav .nav-phone{white-space:nowrap}}
+
+/* Team photograph in About Us, preserving the full original frame. */
+.about-team-photo{max-width:900px;margin:28px 0 0}
+.about-team-photo img{width:100%;height:auto;border-radius:var(--r)}
