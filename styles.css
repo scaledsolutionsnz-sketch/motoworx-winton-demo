@@ -285,23 +285,21 @@ a.chip:hover{transform:translateY(-3px);box-shadow:0 16px 30px -20px rgba(11,12,
 @keyframes shimmer{from{background-position:180% 0}to{background-position:-40% 0}}
 
 /* ---------- shop gallery ---------- */
-.shopgrid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:40px}
-.shopgrid figure{margin:0;border-radius:var(--r);overflow:hidden;background:var(--panel)}
-.shopgrid img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/3;transition:transform .7s var(--ease)}
-.shopgrid figure:hover img{transform:scale(1.04)}
-@media(min-width:760px){
-  .shopgrid{grid-template-columns:repeat(6,1fr)}
-  .shopgrid figure:nth-child(1){grid-column:span 4}
-  .shopgrid figure:nth-child(1) img{aspect-ratio:16/9}
-  .shopgrid figure:nth-child(2){grid-column:span 2}
-  .shopgrid figure:nth-child(2) img{aspect-ratio:4/5}
-  .shopgrid figure:nth-child(3){grid-column:span 2}
-  .shopgrid figure:nth-child(3) img{aspect-ratio:4/5}
-  .shopgrid figure:nth-child(4){grid-column:span 2}
-  .shopgrid figure:nth-child(4) img{aspect-ratio:4/5}
-  .shopgrid figure:nth-child(5){grid-column:span 2}
-  .shopgrid figure:nth-child(5) img{aspect-ratio:4/5}
-}
+.shopgrid{columns:3;column-gap:20px;margin-top:40px}
+.shopgrid figure{margin:0 0 20px;break-inside:avoid;border-radius:var(--r);overflow:hidden;background:var(--panel)}
+.shopgrid img{display:block;width:100%;height:auto}
+@media(max-width:900px){.shopgrid{columns:2}}
+@media(max-width:540px){.shopgrid{columns:1}}
+.about-story{max-width:900px;margin-top:28px}
+.about-story p{margin:0 0 22px;font-size:1.1rem;line-height:1.75}
+.team-heading{margin-top:56px}
+.about-closing{margin-top:40px}
+#team .crew-row{grid-template-columns:220px 1fr}
+.brand{flex-shrink:0}
+.brand img{width:285px;height:auto;max-width:100%}
+.foot .footmark img{width:250px;height:auto}
+@media(max-width:760px){.brand img{width:220px}#team .crew-row{grid-template-columns:1fr}}
+@media(max-width:400px){.brand img{width:190px}}
 
 /* ---------- finance ---------- */
 .finance{display:grid;grid-template-columns:1fr;gap:34px;align-items:start}
@@ -383,3 +381,7 @@ footer{background:var(--dark);color:#AEB6A8;border-top:1px solid var(--line);pad
   html{scroll-behavior:auto}
   .rv{opacity:1;transform:none}
 }
+
+/* Keep the wider mark and contact controls inside every viewport. */
+@media(max-width:540px){.wrap.nav-in{padding-left:16px}.nav-in{gap:10px}.brand img{width:170px}.nav-cta{gap:8px;padding-right:12px}.nav-phone{font-size:.85rem}}
+@media(min-width:1120px){.stock-nav .nav-links{gap:24px}.stock-nav .nav-cta{display:flex}.stock-nav .brand img{width:250px}.stock-nav .nav-phone{white-space:nowrap}}
