@@ -389,3 +389,38 @@ footer{background:var(--dark);color:#AEB6A8;border-top:1px solid var(--line);pad
 /* Team photograph in About Us, preserving the full original frame. */
 .about-team-photo{max-width:900px;margin:28px 0 0}
 .about-team-photo img{width:100%;height:auto;border-radius:var(--r)}
+
+/* About: a balanced story, services and team layout. */
+#team{scroll-margin-top:100px}
+.about-heading{margin-bottom:38px;max-width:740px}
+.about-kicker{display:block;color:var(--volt-ink);font-size:.78rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+.about-heading h2{font-size:clamp(2.4rem,5vw,4rem);line-height:1.02}
+.about-intro{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(30px,5vw,64px);align-items:center}
+#team .about-team-photo{max-width:none;margin:0}
+.about-team-photo img{width:100%;height:auto}
+.about-team-photo figcaption{font-size:.85rem;color:var(--dim);padding-top:12px}
+#team .about-story{max-width:none;margin:0}
+.about-story h3{font-size:1.75rem;margin-bottom:18px}
+#team .about-story p{font-size:1rem;line-height:1.7;margin:0 0 16px}
+#team .about-story .about-lead{font-size:1.2rem;color:var(--ink);line-height:1.5}
+.about-text-link{display:inline-flex;gap:14px;align-items:center;color:var(--volt-ink);font-weight:600;border-bottom:1px solid currentColor;padding-bottom:4px;margin-top:4px}
+.about-text-link:hover{color:var(--ink)}
+.about-services{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;margin-top:48px;padding:32px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.about-services article{display:flex;flex-direction:column;align-items:flex-start}
+.about-services h3{font-size:1.55rem;line-height:1.12;margin-bottom:12px}
+.about-services p{font-size:.98rem;line-height:1.65;margin-bottom:18px}
+.about-services .about-text-link{margin-top:auto;font-size:.92rem}
+.about-team-heading{margin-top:64px;display:flex;justify-content:space-between;align-items:end;gap:24px}
+#team .team-heading{margin:0}
+.about-team-heading>p{max-width:39ch;font-size:1rem}
+#team .crew{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:44px;margin-top:28px}
+#team .crew-row{display:block;padding:26px 0}
+#team .crew-who{margin-bottom:12px}
+#team .crew-row p{font-size:.96rem;line-height:1.65}
+.about-outro{margin-top:48px;display:grid;grid-template-columns:1.1fr 1fr;gap:64px;padding:36px;background:var(--panel-2)}
+.about-outro h3{font-size:1.8rem;line-height:1.05;margin-bottom:18px}
+.about-outro p{font-size:1rem;line-height:1.65;max-width:48ch}
+.about-visit dl{margin-top:16px}.about-visit dl>div{display:flex;justify-content:space-between;gap:20px;padding:9px 0;border-bottom:1px solid var(--line)}
+.about-visit dd{font-weight:600;white-space:nowrap}.about-visit .about-hours-note{font-size:.85rem;color:var(--dim);margin:10px 0 22px}
+@media(max-width:850px){.about-intro{grid-template-columns:1fr}.about-team-photo{max-width:640px!important}.about-services{gap:22px}.about-outro{gap:32px}.about-team-heading{align-items:start;flex-direction:column;gap:14px}}
+@media(max-width:600px){.about-services,#team .crew,.about-outro{grid-template-columns:1fr}.about-services{gap:28px}.about-services article+article{padding-top:24px;border-top:1px solid var(--line)}.about-outro{padding:26px 22px}.about-heading h2{font-size:2.6rem}.about-team-heading{margin-top:46px}}
