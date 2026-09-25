@@ -112,13 +112,13 @@
   function uploadPhoto(file) {
     var clean = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, '-');
     var path = Date.now() + '-' + clean;
-    return fetch(URL_BASE + '/storage/v1/object/bike-photos/' + encodeURIComponent(path), {
+    return fetch(URL_BASE + '/storage/v1/object/motoworx-bike-photos/' + encodeURIComponent(path), {
       method: 'POST',
       headers: Object.assign({ 'Content-Type': file.type || 'image/jpeg' }, headers()),
       body: file
     }).then(function (r) {
       if (!r.ok) throw new Error('Photo upload failed');
-      return URL_BASE + '/storage/v1/object/public/bike-photos/' + encodeURIComponent(path);
+      return URL_BASE + '/storage/v1/object/public/motoworx-bike-photos/' + encodeURIComponent(path);
     });
   }
 
@@ -126,7 +126,7 @@
   var bikes = [];
 
   function loadBikes() {
-    fetch(URL_BASE + '/rest/v1/bikes?select=*&order=sort_order.desc,created_at.desc', { headers: headers() })
+    fetch(URL_BASE + '/rest/v1/motoworx_bikes?select=*&order=sort_order.desc,created_at.desc', { headers: headers() })
       .then(function (r) { return r.json(); })
       .then(function (rows) { bikes = rows || []; renderBikes(); })
       .catch(function () { toast('Could not load the stock list', true); });
@@ -174,7 +174,7 @@
 
     if (act === 'del') {
       if (!confirm('Delete ' + [bike.year, bike.make, bike.model].filter(Boolean).join(' ') + ' from the website? This cannot be undone.')) return;
-      fetch(URL_BASE + '/rest/v1/bikes?id=eq.' + id, { method: 'DELETE', headers: headers() })
+      fetch(URL_BASE + '/rest/v1/motoworx_bikes?id=eq.' + id, { method: 'DELETE', headers: headers() })
         .then(function (r) {
           if (!r.ok) throw new Error();
           toast('Deleted');
@@ -203,7 +203,7 @@
   });
 
   function patch(id, body) {
-    return fetch(URL_BASE + '/rest/v1/bikes?id=eq.' + id, {
+    return fetch(URL_BASE + '/rest/v1/motoworx_bikes?id=eq.' + id, {
       method: 'PATCH', headers: Object.assign({ Prefer: 'return=minimal' }, headers(true)), body: JSON.stringify(body)
     }).then(function (r) { if (!r.ok) throw new Error(); });
   }
@@ -250,7 +250,7 @@
       var id = $('bikeId').value;
       btn.textContent = 'Saving';
       if (id) return patch(id, row);
-      return fetch(URL_BASE + '/rest/v1/bikes', {
+      return fetch(URL_BASE + '/rest/v1/motoworx_bikes', {
         method: 'POST', headers: Object.assign({ Prefer: 'return=minimal' }, headers(true)), body: JSON.stringify(row)
       }).then(function (r) { if (!r.ok) throw new Error(); });
     }).then(function () {
@@ -267,7 +267,7 @@
 
   /* ---------- enquiries ---------- */
   function loadEnquiries() {
-    fetch(URL_BASE + '/rest/v1/enquiries?select=*&order=created_at.desc&limit=100', { headers: headers() })
+    fetch(URL_BASE + '/rest/v1/motoworx_enquiries?select=*&order=created_at.desc&limit=100', { headers: headers() })
       .then(function (r) { return r.json(); })
       .then(function (rows) {
         rows = rows || [];
@@ -302,7 +302,7 @@
     if (!btn) return;
     var id = btn.closest('.aitem').getAttribute('data-id');
     var makeDone = btn.textContent.trim() === 'Mark done';
-    fetch(URL_BASE + '/rest/v1/enquiries?id=eq.' + id, {
+    fetch(URL_BASE + '/rest/v1/motoworx_enquiries?id=eq.' + id, {
       method: 'PATCH', headers: Object.assign({ Prefer: 'return=minimal' }, headers(true)),
       body: JSON.stringify({ handled: makeDone })
     }).then(function (r) {

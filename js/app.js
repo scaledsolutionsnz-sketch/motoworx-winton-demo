@@ -164,7 +164,7 @@
       el.innerHTML = skeletons(parseInt(el.getAttribute('data-limit') || '6', 10) || 6);
     });
 
-    fetch(REST + 'bikes?select=*&order=sort_order.desc,created_at.desc', { headers: HEADERS })
+    fetch(REST + 'motoworx_bikes?select=*&order=sort_order.desc,created_at.desc', { headers: HEADERS })
       .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
       .then(function (rows) { allBikes = rows || []; paint(currentFilter()); })
       .catch(function () {
@@ -307,7 +307,7 @@
       submitBtn.disabled = true;
       submitBtn.childNodes[0].nodeValue = 'Sending ';
 
-      fetch(REST + 'enquiries', {
+      fetch(REST + 'motoworx_enquiries', {
         method: 'POST',
         headers: Object.assign({ 'Content-Type': 'application/json', Prefer: 'return=minimal' }, HEADERS),
         body: JSON.stringify(data)
