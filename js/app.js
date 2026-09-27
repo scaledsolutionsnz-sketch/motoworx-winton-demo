@@ -307,12 +307,22 @@
       submitBtn.disabled = true;
       submitBtn.childNodes[0].nodeValue = 'Sending ';
 
+      // Spam trap: people never see this field, bots fill it in. Pretend it
+      // worked so they move on, and save nothing.
+      if (form._honey && form._honey.value) {
+        okDept.textContent = data.department;
+        form.hidden = true;
+        formOk.hidden = false;
+        return;
+      }
+
       fetch(REST + 'motoworx_enquiries', {
         method: 'POST',
         headers: Object.assign({ 'Content-Type': 'application/json', Prefer: 'return=minimal' }, HEADERS),
         body: JSON.stringify(data)
       }).then(function (r) {
         if (!r.ok) throw new Error('HTTP ' + r.status);
+        emailEnquiry(data);
         okDept.textContent = data.department;
         form.hidden = true;
         formOk.hidden = false;
@@ -325,6 +335,34 @@
         setDept(deptInput.value);
       });
     });
+
+    /* Emails the enquiry to the shop through FormSubmit, after it has been
+       saved. Saving is what counts: the enquiry is already in /admin, so a
+       failed email never shows the customer an error. The first email to a
+       new address sends the shop an "Activate form" email; nothing arrives
+       until someone clicks it once. */
+    function emailEnquiry(d) {
+      var to = CFG.enquiryEmail;
+      if (!to || !window.fetch) return;
+      var dept = d.department.charAt(0).toUpperCase() + d.department.slice(1);
+      fetch('https://formsubmit.co/ajax/' + to.user + '@' + to.domain, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          _subject: dept + ' enquiry from the website: ' + d.name,
+          _replyto: d.email,
+          _template: 'table',
+          _captcha: 'false',
+          Department: dept,
+          Name: d.name,
+          Email: d.email,
+          Phone: d.phone || '-',
+          Bike: d.bike || '-',
+          Message: d.message,
+          'Also saved in': 'Stock manager, motoworx.co.nz/admin.html'
+        })
+      }).catch(function () {});
+    }
 
     var again = document.getElementById('againBtn');
     if (again) again.addEventListener('click', function () {
