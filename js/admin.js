@@ -21,6 +21,51 @@
     return h;
   }
 
+  /* Sign-ins last an hour. Refresh a little early, and once more on a 401,
+     so a page left open all day keeps saving instead of failing quietly. */
+  function saveSession(s) {
+    session = s;
+    try { localStorage.setItem(LS, JSON.stringify(s)); } catch (e) {}
+  }
+  function signedOut() {
+    try { localStorage.removeItem(LS); } catch (e) {}
+    session = null;
+    showAuth();
+    toast('You were signed out. Sign in again to keep going.', true);
+  }
+  var refreshing = null;
+  function refreshSession() {
+    if (!session || !session.refresh_token) return Promise.reject(new Error('Signed out'));
+    if (!refreshing) {
+      var user = session.user;
+      refreshing = fetch(URL_BASE + '/auth/v1/token?grant_type=refresh_token', {
+        method: 'POST',
+        headers: { apikey: KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh_token: session.refresh_token })
+      }).then(function (r) { return r.json().then(function (b) { return { ok: r.ok, body: b }; }); })
+        .then(function (res) {
+          if (!res.ok || !res.body.access_token) throw new Error('Signed out');
+          if (!res.body.user && user) res.body.user = user;
+          saveSession(res.body);
+        })
+        .catch(function (e) { signedOut(); throw e; })
+        .then(function () { refreshing = null; }, function (e) { refreshing = null; throw e; });
+    }
+    return refreshing;
+  }
+  function ensureSession() {
+    if (session && session.expires_at && session.expires_at * 1000 - Date.now() < 120000) return refreshSession();
+    return Promise.resolve();
+  }
+  function authFetch(url, build) {
+    return ensureSession()
+      .then(function () { return fetch(url, build()); })
+      .then(function (r) {
+        if (r.status !== 401 || !session) return r;
+        return refreshSession().then(function () { return fetch(url, build()); });
+      });
+  }
+
   var toastTimer;
   function toast(msg, bad) {
     var t = $('toast');
@@ -71,8 +116,7 @@
     }).then(function (r) { return r.json().then(function (b) { return { ok: r.ok, body: b }; }); })
       .then(function (res) {
         if (!res.ok) throw new Error(res.body.error_description || res.body.msg || 'Could not sign in');
-        session = res.body;
-        localStorage.setItem(LS, JSON.stringify(session));
+        saveSession(res.body);
         showApp();
       })
       .catch(function (e2) { err.textContent = e2.message + '. Check the email and password and try again.'; })
@@ -96,26 +140,82 @@
   });
 
   /* ---------- photo picker ---------- */
-  var pickedFile = null;
+  /* Photos are shrunk to 2000px and saved as JPEG before upload. Phone photos
+     are 4-10MB, which is slow on shop wifi and slow on the website, and
+     iPhone HEIC files do not show in most browsers on a PC. Doing it when the
+     photo is picked means any problem shows straight away, not after Save. */
+  var pickedFile = null;   // the prepared Blob that will be uploaded
+  var pickedName = '';
+  var photoReady = null;   // Promise while a picked photo is being prepared
+  var MAX_EDGE = 2000;
+
+  function decode(file) {
+    if (window.createImageBitmap) {
+      return createImageBitmap(file, { imageOrientation: 'from-image' }).catch(function () { return viaImg(file); });
+    }
+    return viaImg(file);
+  }
+  function viaImg(file) {
+    return new Promise(function (ok, fail) {
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function () { ok(img); };
+      img.onerror = function () { URL.revokeObjectURL(url); fail(new Error('decode')); };
+      img.src = url;
+    });
+  }
+  function preparePhoto(file) {
+    return decode(file).then(function (img) {
+      var w = img.width, h = img.height;
+      var scale = Math.min(1, MAX_EDGE / Math.max(w, h));
+      var small = file.size < 1500000 && scale === 1 && /^image\/(jpeg|png|webp)$/.test(file.type);
+      if (small) return file;
+      var c = document.createElement('canvas');
+      c.width = Math.round(w * scale);
+      c.height = Math.round(h * scale);
+      var ctx = c.getContext('2d');
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.drawImage(img, 0, 0, c.width, c.height);
+      return new Promise(function (ok, fail) {
+        c.toBlob(function (b) { b ? ok(b) : fail(new Error('encode')); }, 'image/jpeg', 0.86);
+      });
+    });
+  }
+
   $('drop').addEventListener('click', function () { $('photo').click(); });
   $('photo').addEventListener('change', function () {
-    pickedFile = this.files && this.files[0] ? this.files[0] : null;
-    if (!pickedFile) return;
-    var reader = new FileReader();
-    reader.onload = function (ev) {
-      $('dropPreview').innerHTML = '<img src="' + ev.target.result + '" alt="Selected photo preview">';
-      $('dropText').textContent = pickedFile.name + ' — tap to choose a different one';
-    };
-    reader.readAsDataURL(pickedFile);
+    var file = this.files && this.files[0] ? this.files[0] : null;
+    this.value = '';
+    if (!file) return;
+    pickedFile = null;
+    $('bikeErr').textContent = '';
+    $('dropText').textContent = 'Getting the photo ready';
+    photoReady = preparePhoto(file).then(function (blob) {
+      pickedFile = blob;
+      pickedName = file.name.replace(/\.[a-z0-9]+$/i, '') + (blob.type === 'image/png' ? '.png' : blob.type === 'image/webp' ? '.webp' : '.jpg');
+      $('dropPreview').innerHTML = '<img src="' + URL.createObjectURL(blob) + '" alt="Selected photo preview">';
+      $('dropText').textContent = file.name + ', tap to choose a different one';
+    }).catch(function () {
+      $('dropPreview').innerHTML = '';
+      $('dropText').textContent = 'Tap to choose a photo, or take one on your phone';
+      $('bikeErr').textContent = 'That photo would not open. Choose a JPG or PNG, or take the photo again with the camera.';
+      throw new Error('That photo would not open. Choose a JPG or PNG');
+    });
+    // Handled here too, so a failed photo is never an unhandled rejection;
+    // Save still waits on (and reports) the original promise.
+    photoReady.catch(function () {});
   });
 
-  function uploadPhoto(file) {
-    var clean = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, '-');
+  function uploadPhoto(blob) {
+    var clean = (pickedName || 'photo.jpg').toLowerCase().replace(/[^a-z0-9.]+/g, '-');
     var path = Date.now() + '-' + clean;
-    return fetch(URL_BASE + '/storage/v1/object/motoworx-bike-photos/' + encodeURIComponent(path), {
-      method: 'POST',
-      headers: Object.assign({ 'Content-Type': file.type || 'image/jpeg' }, headers()),
-      body: file
+    return authFetch(URL_BASE + '/storage/v1/object/motoworx-bike-photos/' + encodeURIComponent(path), function () {
+      return {
+        method: 'POST',
+        headers: Object.assign({ 'Content-Type': blob.type || 'image/jpeg' }, headers()),
+        body: blob
+      };
     }).then(function (r) {
       if (!r.ok) throw new Error('Photo upload failed');
       return URL_BASE + '/storage/v1/object/public/motoworx-bike-photos/' + encodeURIComponent(path);
@@ -126,8 +226,8 @@
   var bikes = [];
 
   function loadBikes() {
-    fetch(URL_BASE + '/rest/v1/motoworx_bikes?select=*&order=sort_order.desc,created_at.desc', { headers: headers() })
-      .then(function (r) { return r.json(); })
+    authFetch(URL_BASE + '/rest/v1/motoworx_bikes?select=*&order=sort_order.desc,created_at.desc', function () { return { headers: headers() }; })
+      .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
       .then(function (rows) { bikes = rows || []; renderBikes(); })
       .catch(function () { toast('Could not load the stock list', true); });
   }
@@ -174,7 +274,7 @@
 
     if (act === 'del') {
       if (!confirm('Delete ' + [bike.year, bike.make, bike.model].filter(Boolean).join(' ') + ' from the website? This cannot be undone.')) return;
-      fetch(URL_BASE + '/rest/v1/motoworx_bikes?id=eq.' + id, { method: 'DELETE', headers: headers() })
+      authFetch(URL_BASE + '/rest/v1/motoworx_bikes?id=eq.' + id, function () { return { method: 'DELETE', headers: headers() }; })
         .then(function (r) {
           if (!r.ok) throw new Error();
           toast('Deleted');
@@ -203,15 +303,16 @@
   });
 
   function patch(id, body) {
-    return fetch(URL_BASE + '/rest/v1/motoworx_bikes?id=eq.' + id, {
+    return authFetch(URL_BASE + '/rest/v1/motoworx_bikes?id=eq.' + id, function () { return {
       method: 'PATCH', headers: Object.assign({ Prefer: 'return=minimal' }, headers(true)), body: JSON.stringify(body)
-    }).then(function (r) { if (!r.ok) throw new Error(); });
+    }; }).then(function (r) { if (!r.ok) throw new Error(); });
   }
 
   function resetForm() {
     $('bikeForm').reset();
     $('bikeId').value = '';
     pickedFile = null;
+    photoReady = null;
     $('dropPreview').innerHTML = '';
     $('dropText').textContent = 'Tap to choose a photo, or take one on your phone';
     $('formTitle').textContent = 'Add a bike';
@@ -229,7 +330,7 @@
 
     var btn = $('saveBtn'), label = btn.textContent;
     btn.disabled = true;
-    btn.textContent = pickedFile ? 'Uploading photo' : 'Saving';
+    btn.textContent = photoReady ? 'Getting the photo ready' : 'Saving';
 
     var num = function (v) { return v === '' || v === null ? null : Number(v); };
     var row = {
@@ -244,15 +345,21 @@
       sort_order: Number($('sort').value || 0)
     };
 
-    var work = pickedFile ? uploadPhoto(pickedFile).then(function (url) { row.image_url = url; }) : Promise.resolve();
+    /* Wait for a photo that is still being prepared. Saving without it was
+       how a picked photo could "disappear" from a new bike. */
+    var work = Promise.resolve(photoReady).then(function () {
+      if (!pickedFile) return;
+      btn.textContent = 'Uploading photo';
+      return uploadPhoto(pickedFile).then(function (url) { row.image_url = url; });
+    });
 
     work.then(function () {
       var id = $('bikeId').value;
       btn.textContent = 'Saving';
       if (id) return patch(id, row);
-      return fetch(URL_BASE + '/rest/v1/motoworx_bikes', {
+      return authFetch(URL_BASE + '/rest/v1/motoworx_bikes', function () { return {
         method: 'POST', headers: Object.assign({ Prefer: 'return=minimal' }, headers(true)), body: JSON.stringify(row)
-      }).then(function (r) { if (!r.ok) throw new Error(); });
+      }; }).then(function (r) { if (!r.ok) throw new Error(); });
     }).then(function () {
       toast($('bikeId').value ? 'Changes saved' : 'Bike added to the website');
       resetForm();
@@ -261,14 +368,14 @@
       err.textContent = (e2 && e2.message ? e2.message : 'That did not save') + '. Try again, or check your connection.';
     }).then(function () {
       btn.disabled = false;
-      if (btn.textContent === 'Saving' || btn.textContent === 'Uploading photo') btn.textContent = label;
+      if (['Saving', 'Uploading photo', 'Getting the photo ready'].indexOf(btn.textContent) > -1) btn.textContent = label;
     });
   });
 
   /* ---------- enquiries ---------- */
   function loadEnquiries() {
-    fetch(URL_BASE + '/rest/v1/motoworx_enquiries?select=*&order=created_at.desc&limit=100', { headers: headers() })
-      .then(function (r) { return r.json(); })
+    authFetch(URL_BASE + '/rest/v1/motoworx_enquiries?select=*&order=created_at.desc&limit=100', function () { return { headers: headers() }; })
+      .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
       .then(function (rows) {
         rows = rows || [];
         var open = rows.filter(function (r2) { return !r2.handled; }).length;
@@ -302,10 +409,10 @@
     if (!btn) return;
     var id = btn.closest('.aitem').getAttribute('data-id');
     var makeDone = btn.textContent.trim() === 'Mark done';
-    fetch(URL_BASE + '/rest/v1/motoworx_enquiries?id=eq.' + id, {
+    authFetch(URL_BASE + '/rest/v1/motoworx_enquiries?id=eq.' + id, function () { return {
       method: 'PATCH', headers: Object.assign({ Prefer: 'return=minimal' }, headers(true)),
       body: JSON.stringify({ handled: makeDone })
-    }).then(function (r) {
+    }; }).then(function (r) {
       if (!r.ok) throw new Error();
       loadEnquiries();
     }).catch(function () { toast('Could not update that', true); });
@@ -313,10 +420,10 @@
 
   /* ---------- boot ---------- */
   if (session && session.access_token) {
-    fetch(URL_BASE + '/auth/v1/user', { headers: headers() })
+    authFetch(URL_BASE + '/auth/v1/user', function () { return { headers: headers() }; })
       .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
-      .then(function (u) { session.user = u; showApp(); })
-      .catch(function () { localStorage.removeItem(LS); session = null; showAuth(); });
+      .then(function (u) { session.user = u; saveSession(session); showApp(); })
+      .catch(function () { try { localStorage.removeItem(LS); } catch (e) {} session = null; showAuth(); });
   } else {
     showAuth();
   }
